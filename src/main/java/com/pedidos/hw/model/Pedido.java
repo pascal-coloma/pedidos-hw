@@ -15,7 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "pedido", schema = "PEDIDOMS")
+@Table(name = "pedido")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -33,10 +33,10 @@ public class Pedido {
     private Integer estado;
 
     @Column(name="id_usuario")
-    private Long idUsuario;
+    private Long id_usuario;
 
     @Column(name = "id_producto")
-    private Long idProducto;
+    private Long id_producto;
 
 
 }

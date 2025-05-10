@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.pedidos.hw.repository.PedidoRepository;
 import com.pedidos.hw.model.Pedido;
+
+import java.util.Date;
 import java.util.List;
 
 import jakarta.transaction.Transactional;
@@ -32,5 +34,12 @@ public class PedidoService {
         return pedidoRepository.saveAll(listaPedidos);
     }
 
+    public List<Pedido> buscarFecha(Date fecha_pedido){
+        return pedidoRepository.findByFecha_pedido(fecha_pedido);
+    }
+
+    public void delete(Long id){
+        pedidoRepository.deleteById(id);
+    }
 
 }
