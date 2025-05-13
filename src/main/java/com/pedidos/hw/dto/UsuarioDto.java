@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// Clase que consume datos desde el endpoint de usuarios. Los cuales son mostrados como datos de contacto para el servicio de pedidos
 public class UsuarioDto {
 
     private Long id;

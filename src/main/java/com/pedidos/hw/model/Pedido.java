@@ -20,12 +20,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+// Clase base de Pedidos la cual funciona como tabla en Oracle SQL para el poblado de datos.
 public class Pedido {
-
+    
+    // ID principal de pedidos, funciona como autogenerativo utilizando un NEXTVAL 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Formateo de los datos para recibir una fecha 
     @Column(nullable = false)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date fecha_pedido;
@@ -33,9 +36,12 @@ public class Pedido {
     @Column(nullable = false)
     private Integer estado;
 
+    // Esta columna genera la relacion con la tabla de usuarios
     @Column(name="id_usuario", nullable = false)
     private Long id_usuario;
 
+    // Esta columna genera la relacion con la tabla de productos
+    // Debiese ser una lista de productos desde el MS de inventario
     @Column(name = "id_producto")
     private Long id_producto;
 
