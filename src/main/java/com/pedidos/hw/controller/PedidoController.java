@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Date;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.pedidos.hw.dto.UsuarioDto;
@@ -21,6 +22,7 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     // Mapeo de datos de contacto segun ID de pedido llamando un DTO para recibir datos del MS de usuarios
+    
     @GetMapping("/{idPedido}/usuario-contacto")
     public ResponseEntity<UsuarioDto> getContactoUsuario(@PathVariable Long idPedido){
         UsuarioDto contacto = pedidoService.getContactoPorIdPedido(idPedido);
@@ -28,6 +30,7 @@ public class PedidoController {
     }
 
     // Listado de pedidos usando el metodo findAll del Repository
+    @CrossOrigin(origins = "http://localhost:5500")
     @GetMapping
     public ResponseEntity<List<Pedido>> listar(){
         List<Pedido> pedidos = pedidoService.findAll();
@@ -41,7 +44,7 @@ public class PedidoController {
     @PostMapping("/guardar")
     public ResponseEntity<Pedido> guardar(@RequestBody Pedido pedido){
         Pedido nuevoPedido = pedidoService.save(pedido);
-        return ResponseEntity.ok(nuevoPedido);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoPedido);
     }
 
     // Busqueda de pedidos por ID del pedido aceptando una variable dentro de la URL
