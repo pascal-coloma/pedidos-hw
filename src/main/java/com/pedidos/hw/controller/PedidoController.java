@@ -16,31 +16,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 
+
+
 @RestController
-@RequestMapping("/hoppyware/v1/pedidos")
+@RequestMapping("/hoppyware/v1/pedido")
 public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
 
-    private final UsuarioClient usuarioClient;
+    //@GetMapping("/usuarios/buscarRun")
+    //public ResponseEntity<List<Pedido>> getUsuario(@RequestParam Long id){
+    //    List<Pedido> pedidos = usuarioClient.getPedidos(id);
+    //    return ResponseEntity.ok(pedidos);
+    //}
 
-    public PedidoController(UsuarioClient usuarioClient){
-        this.usuarioClient = usuarioClient;
+    @GetMapping("/{idPedido}/usuario-contacto")
+    public ResponseEntity<UsuarioDto> getContactoUsuario(@PathVariable Long idPedido){
+        UsuarioDto contacto = pedidoService.getContactoPorIdPedido(idPedido);
+        return ResponseEntity.ok(contacto);
     }
-
-    @GetMapping("/usuarios/buscarRun")
-    public ResponseEntity<UsuarioDto> getUsuario(@RequestParam String run){
-        UsuarioDto usuario = usuarioClient.obtenerUsuarioPorRun(run);
-        return ResponseEntity.ok(usuario);
-    }
-
-    @GetMapping("/usuarios")
-    public ResponseEntity<List<UsuarioDto>> getTodosUsuarios(){
-        List<UsuarioDto> listaUsuarioDtos = usuarioClient.obtenerTodosUsuarios();
-        return ResponseEntity.ok(listaUsuarioDtos);
-    }
-    
 
     @GetMapping
     public ResponseEntity<List<Pedido>> listar(){
@@ -91,9 +86,7 @@ public class PedidoController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-    
     }
-
     @DeleteMapping("/eliminarPedido/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id){
         try {
@@ -104,5 +97,19 @@ public class PedidoController {
         }
     }
 
+
+    @GetMapping("/porUsuario")
+    public ResponseEntity<List<Pedido>> getPedidosUsuario(@RequestParam Long id_usr){
+        try {
+            List<Pedido> pedidosPorUser = pedidoService.getPedsPorUsr(id_usr);
+            return ResponseEntity.ok(pedidosPorUser);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+    
+
+    
 
 }

@@ -1,5 +1,6 @@
 package com.pedidos.hw.model;
 
+
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,7 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "pedido")
+@Table(name = "pedido", schema = "PEDIDOMS")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -32,11 +33,12 @@ public class Pedido {
     @Column(nullable = false)
     private Integer estado;
 
-    @Column(name="id_usuario")
+    @Column(name="id_usuario", nullable = false)
     private Long id_usuario;
 
     @Column(name = "id_producto")
     private Long id_producto;
 
+    
 
 }

@@ -13,7 +13,11 @@ import java.util.Date;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
-    @Query(value = "SELECT * FROM pedido WHERE fecha_pedido :=fecha_pedido", nativeQuery = true)
+    @Query(value = "SELECT * FROM pedido WHERE fecha_pedido = :fecha_pedido", nativeQuery = true)
     List<Pedido> findByFecha_pedido(Date fecha_pedido);
 
-}
+    
+    @Query(value = "SELECT * FROM pedido WHERE id_usuario = :id_usuario", nativeQuery = true)
+    List<Pedido> findById_usuario(Long id_usuario);
+
+}   

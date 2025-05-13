@@ -1,29 +1,28 @@
 package com.pedidos.hw.service;
 
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
+
+
 import com.pedidos.hw.dto.UsuarioDto;
+import com.pedidos.hw.model.Pedido;
 import java.util.List;
-@Service
-public class UsuarioClient {
 
-    private final RestTemplate restTemplate;
+@FeignClient(name = "usuario-service", url = "http://localhost:8081/hoppyware/v1/usuario")
+public interface UsuarioClient {
 
-    public UsuarioClient(RestTemplate restTemplate){
-        this.restTemplate = restTemplate;
-    }
 
-    public UsuarioDto obtenerUsuarioPorRun(String run){
-        String url = "http://localhost:8081/hoppyware/v1/usuarios/buscarRun?run=" + run;
-        return restTemplate.getForObject(url, UsuarioDto.class);
-    }
+    @GetMapping("/usuario/buscarRun")
+    UsuarioDto getUsuarioDto(@PathVariable String run);
 
-    public List<UsuarioDto> obtenerTodosUsuarios(){
-        String url = "http://localhost:8081/hoppyware/v1/usuarios";
-        ResponseEntity<List<UsuarioDto>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<UsuarioDto>>(){});
-        return response.getBody();
-    }
-}
+    @GetMapping("/{id}")
+    UsuarioDto getUsrPorId(@PathVariable("id") Long id);
+
+   
+}   

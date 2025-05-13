@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pedidos.hw.repository.PedidoRepository;
+import com.pedidos.hw.dto.UsuarioDto;
+//import com.pedidos.hw.dto.UsuarioDto;
 import com.pedidos.hw.model.Pedido;
 
 import java.util.Date;
@@ -17,6 +19,19 @@ public class PedidoService {
 
     @Autowired
     private PedidoRepository pedidoRepository;
+    private final UsuarioClient usuarioClient;
+
+    public PedidoService(PedidoRepository pedidoRepository, UsuarioClient usuarioClient){
+        this.pedidoRepository = pedidoRepository;
+        this.usuarioClient = usuarioClient;
+    }
+
+    public UsuarioDto getContactoPorIdPedido(Long idPedido){
+        Pedido pedido = pedidoRepository.findById(idPedido).orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        Long idUsuario = pedido.getId_usuario();
+        return usuarioClient.getUsrPorId(idUsuario);
+    }
 
     public List<Pedido> findAll(){
         return pedidoRepository.findAll();
@@ -42,4 +57,7 @@ public class PedidoService {
         pedidoRepository.deleteById(id);
     }
 
+    public List<Pedido> getPedsPorUsr(Long id_usr){
+        return pedidoRepository.findById_usuario(id_usr);
+    }
 }
