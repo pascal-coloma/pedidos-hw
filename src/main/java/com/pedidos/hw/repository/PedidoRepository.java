@@ -21,4 +21,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Query(value = "SELECT * FROM pedido WHERE id_usuario = :id_usuario", nativeQuery = true)
     List<Pedido> findById_usuario(Long id_usuario);
 
+    //@Query(value = "SELECT * FROM pedido WHERE ")
+
 }   

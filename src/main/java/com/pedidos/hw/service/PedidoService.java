@@ -2,32 +2,36 @@ package com.pedidos.hw.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.pedidos.hw.repository.PedidoRepository;
+import com.pedidos.hw.dto.PedidoUsuarioDTO;
+import com.pedidos.hw.dto.ProductoDTO;
 import com.pedidos.hw.dto.UsuarioDto;
 import com.pedidos.hw.model.Pedido;
 
 import java.util.Date;
+//import java.util.HashMap;
 import java.util.List;
+//import java.util.Map;
+import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PedidoService {
 
     @Autowired
     // Repositorio de metodos base para una clase
     private PedidoRepository pedidoRepository;
+  
 
     // Constante definida para trabajar con el Cliente que se comunica con el MS de Usuarios
     private final UsuarioClient usuarioClient;
+    private final ProductoClient productoClient;
 
     // Constructor del pedido service donde se define el repositorio de metodos y la clase usuarioclient
-    public PedidoService(PedidoRepository pedidoRepository, UsuarioClient usuarioClient){
-        this.pedidoRepository = pedidoRepository;
-        this.usuarioClient = usuarioClient;
-    }
     
     // Metodo que trae los datos de contacto por id de pedido
     public UsuarioDto getContactoPorIdPedido(Long idPedido){
@@ -36,6 +40,44 @@ public class PedidoService {
         return usuarioClient.getUsrPorId(idUsuario);
     }
 
+    public List<PedidoUsuarioDTO> listarPedidosDTO() {
+    List<Pedido> pedidos = pedidoRepository.findAll();
+
+    //Map<Long, ProductoDTO> productoCache = new HashMap<>();
+
+    return pedidos.stream().map(p -> {
+        PedidoUsuarioDTO dto = new PedidoUsuarioDTO();
+        dto.setId(p.getId());
+        dto.setEstado(p.getEstado());
+        dto.setFecha_pedido(p.getFecha_pedido());
+
+        
+        // Enriquecer detalles con producto
+        p.getDetalles().forEach(detalle -> {
+            Long idProd = detalle.getIdProducto();
+            if (idProd != null) {
+                try {
+                    ProductoDTO producto = productoClient.getProductoDTO(idProd);
+                    detalle.setProductoDTO(producto);
+                } catch (Exception e) {
+                    detalle.setProductoDTO(null);
+                }
+            }
+        });
+
+        dto.setDetalles(p.getDetalles());
+
+        try {
+            UsuarioDto usuario = usuarioClient.getUsrPorId(p.getId_usuario());
+            dto.setDetallesContacto(usuario);
+        } catch (Exception e) {
+            dto.setDetallesContacto(null);
+        }
+
+        return dto;
+    }).collect(Collectors.toList());
+    
+}
     // Listado de todos los pedidos 
     public List<Pedido> findAll(){
         return pedidoRepository.findAll();
@@ -70,4 +112,6 @@ public class PedidoService {
     public List<Pedido> getPedsPorUsr(Long id_usr){
         return pedidoRepository.findById_usuario(id_usr);
     }
+
+    
 }

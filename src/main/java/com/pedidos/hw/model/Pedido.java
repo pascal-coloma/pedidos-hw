@@ -1,14 +1,16 @@
 package com.pedidos.hw.model;
 
-
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity
 @Table(name = "pedido", schema = "PEDIDOMS")
@@ -18,7 +20,7 @@ import lombok.NoArgsConstructor;
 // Clase base de Pedidos la cual funciona como tabla en Oracle SQL para el poblado de datos.
 public class Pedido {
     
-    // ID principal de pedidos, funciona como autogenerativo utilizando un NEXTVAL 
+    // ID principal de pedidos, funciona como autogenerativo utilizando una secuencia  
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,11 +37,8 @@ public class Pedido {
     @Column(name="id_usuario", nullable = false)
     private Long id_usuario;
 
-    // Esta columna genera la relacion con la tabla de productos
-    // Debiese ser una lista de productos desde el MS de inventario
-    @Column(name = "id_producto")
-    private Long id_producto;
-
-    
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<DetallePedido> detalles = new ArrayList<>();
 
 }

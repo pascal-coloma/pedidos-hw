@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.pedidos.hw.dto.PedidoUsuarioDTO;
 import com.pedidos.hw.dto.UsuarioDto;
+import com.pedidos.hw.model.DetallePedido;
 import com.pedidos.hw.model.Pedido;
 import com.pedidos.hw.service.PedidoService;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 // Controlador REST para definir los distintos endpoints del microservicio de Pedidos. Se migro de un resttemplate a Feign Client
 @RestController
@@ -28,12 +31,12 @@ public class PedidoController {
         UsuarioDto contacto = pedidoService.getContactoPorIdPedido(idPedido);
         return ResponseEntity.ok(contacto);
     }
-
+    
     // Listado de pedidos usando el metodo findAll del Repository
-    @CrossOrigin(origins = "http://localhost:5500")
+    
     @GetMapping
-    public ResponseEntity<List<Pedido>> listar(){
-        List<Pedido> pedidos = pedidoService.findAll();
+    public ResponseEntity<List<PedidoUsuarioDTO>> listar(){
+        List<PedidoUsuarioDTO> pedidos = pedidoService.listarPedidosDTO();
         if (pedidos.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -43,12 +46,15 @@ public class PedidoController {
     // Guardado de datos de un Pedido
     @PostMapping("/guardar")
     public ResponseEntity<Pedido> guardar(@RequestBody Pedido pedido){
+        for (DetallePedido detalle : pedido.getDetalles()) {
+            detalle.setPedido(pedido);
+        }
         Pedido nuevoPedido = pedidoService.save(pedido);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoPedido);
     }
 
     // Busqueda de pedidos por ID del pedido aceptando una variable dentro de la URL
-    @GetMapping("/buscarId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Pedido> buscarId(@PathVariable Long id){
         try {
             Pedido pedido = pedidoService.findById(id);
@@ -76,7 +82,7 @@ public class PedidoController {
             ped.setId(pedido.getId());
             ped.setEstado(pedido.getEstado());
             ped.setFecha_pedido(pedido.getFecha_pedido());
-            ped.setId_producto(pedido.getId_producto());
+            ped.setId(pedido.getId());
             ped.setId_usuario(pedido.getId_usuario());
 
             pedidoService.save(ped);
@@ -87,7 +93,7 @@ public class PedidoController {
     }
 
     // Eliminacion de pedidos por su ID de pedido usando una solicitud DELETE
-    @DeleteMapping("/eliminarPedido/{id}")
+    @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id){
         try {
             pedidoService.delete(id);
@@ -98,10 +104,10 @@ public class PedidoController {
     }
 
     // Busqueda de pedidos por la ID de usuario comunicandose con el microservicio de usuarios 
-    @GetMapping("/porUsuario")
-    public ResponseEntity<List<Pedido>> getPedidosUsuario(@RequestParam Long id_usr){
+    @GetMapping("/{id}/pedidos-cliente")
+    public ResponseEntity<List<Pedido>> getPedidosUsuario(@PathVariable Long id){
         try {
-            List<Pedido> pedidosPorUser = pedidoService.getPedsPorUsr(id_usr);
+            List<Pedido> pedidosPorUser = pedidoService.getPedsPorUsr(id);
             return ResponseEntity.ok(pedidosPorUser);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
