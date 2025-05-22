@@ -1,8 +1,7 @@
 package com.pedidos.hw.model;
 
-
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pedidos.hw.dto.ProductoDTO;
 
@@ -20,31 +19,26 @@ public class DetallePedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @JsonIgnore
+    private Long id_detalle;
 
     @Column(nullable = false)
     private Integer cantidad;
 
-    @Column(nullable = false)
-    private Double precioUnitario;
+    @Column(name = "id_producto")
+    private Long id_producto;
 
-    @Column(name = "id_producto", nullable = false)
-    private Long idProducto;
+    public Long getId_producto() {
+        return id_producto;
+    }
+
+    public void setId_producto(Long id_producto) {
+        this.id_producto = id_producto;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido", nullable = false)
     @JsonBackReference
     private Pedido pedido;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Transient
-    private ProductoDTO productoDTO;
-
-    
-
-    
-
-    
-
 
 }
