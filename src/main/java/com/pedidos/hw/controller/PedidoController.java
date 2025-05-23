@@ -43,7 +43,6 @@ public class PedidoController {
         return ResponseEntity.ok(pedido);
 
     }
-
     
 
     // Guardado de datos de un Pedido
@@ -110,9 +109,9 @@ public class PedidoController {
     // Busqueda de pedidos por la ID de usuario comunicandose con el microservicio
     // de usuarios
     @GetMapping("/{id}/pedidos-cliente")
-    public ResponseEntity<List<Pedido>> getPedidosUsuario(@PathVariable Long id) {
+    public ResponseEntity<List<PedidoUsuarioDTO>> getPedidosUsuario(@PathVariable Long id) {
         try {
-            List<Pedido> pedidosPorUser = pedidoService.getPedsPorUsr(id);
+            List<PedidoUsuarioDTO> pedidosPorUser = pedidoService.listarPedidosPorUsuario(id);
             return ResponseEntity.ok(pedidosPorUser);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

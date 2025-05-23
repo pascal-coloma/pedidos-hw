@@ -66,7 +66,7 @@ public class PedidoService {
                     detalleDTO.setProducto(producto);
                 } catch (Exception e) {
                     System.out.println("Error al obtener producto: " + e.getMessage());
-                    detalleDTO.setProducto(null); 
+                    detalleDTO.setProducto(null);
                 }
 
                 detalleDTOs.add(detalleDTO);
@@ -118,6 +118,48 @@ public class PedidoService {
     // Listado de pedidos segun ID de usuario
     public List<Pedido> getPedsPorUsr(Long id_usr) {
         return pedidoRepository.findById_usuario(id_usr);
+    }
+
+    public List<PedidoUsuarioDTO> listarPedidosPorUsuario(Long idUsr) {
+        List<Pedido> pedidos = pedidoRepository.findById_usuario(idUsr);
+        return pedidos.stream().map(p -> {
+            PedidoUsuarioDTO dto = new PedidoUsuarioDTO();
+            dto.setId(p.getId());
+            dto.setEstado(p.getEstado());
+            dto.setFecha_pedido(p.getFecha_pedido());
+
+            List<DetallePedidoDTO> detalleDTOs = new ArrayList<>();
+
+            for (DetallePedido detalle : p.getDetalles()) {
+                DetallePedidoDTO detalleDTO = new DetallePedidoDTO();
+                detalleDTO.setCantidad(detalle.getCantidad());
+                detalleDTO.setId_producto(detalle.getId_producto());
+
+                try {
+                    ProductoDTO producto = productoClient.getProductoDTO(detalle.getId_producto());
+                    detalleDTO.setProducto(producto);
+                } catch (Exception e) {
+                    System.out.println("Error al obtener producto: " + e.getMessage());
+                    detalleDTO.setProducto(null);
+                }
+
+                detalleDTOs.add(detalleDTO);
+            }
+
+            dto.setDetalles(detalleDTOs);
+
+            // Opcional: incluir datos de usuario, pero puedes omitir si eso causa
+            // recursividad
+            try {
+                UsuarioDto usuario = usuarioClient.getUsrPorId(p.getId_usuario());
+                dto.setDetallesContacto(usuario);
+            } catch (Exception e) {
+                dto.setDetallesContacto(null);
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+
     }
 
     public ProductoDTO getProductoPorId(Long id) {

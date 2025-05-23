@@ -3,7 +3,7 @@ package com.pedidos.hw.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pedidos.hw.dto.ProductoDTO;
+
 import com.pedidos.hw.model.*;
 //import com.pedidos.hw.service.ProductoClient;
 

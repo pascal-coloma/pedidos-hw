@@ -2,13 +2,13 @@ package com.pedidos.hw.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.pedidos.hw.dto.ProductoDTO;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name = "detalle_pedido")
@@ -40,5 +40,9 @@ public class DetallePedido {
     @JoinColumn(name = "id_pedido", nullable = false)
     @JsonBackReference
     private Pedido pedido;
+
+    
+
+    
 
 }
