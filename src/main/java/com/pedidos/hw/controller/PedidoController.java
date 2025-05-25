@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import com.pedidos.hw.dto.*;
 import com.pedidos.hw.model.DetallePedido;
 import com.pedidos.hw.model.Pedido;
-import com.pedidos.hw.service.DetallePedidoService;
 import com.pedidos.hw.service.PedidoService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 // Controlador REST para definir los distintos endpoints del microservicio de Pedidos. Se migro de un resttemplate a Feign Client
 @RestController
@@ -21,7 +23,7 @@ public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
 
-    private DetallePedidoService detallePedidoService;
+    //private DetallePedidoService detallePedidoService;
 
     // Mapeo de datos de contacto segun ID de pedido llamando un DTO para recibir
     // datos del MS de usuarios
@@ -56,6 +58,20 @@ public class PedidoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoPedido);
     }
 
+    // Guardado de una lista 
+    @PostMapping("/guardarLista")
+    public ResponseEntity<List<Pedido>> guardarLista(@RequestBody List<Pedido> listaPedidos){
+        for (Pedido pedido : listaPedidos) {
+            for (DetallePedido detalle : pedido.getDetalles()){
+                detalle.setPedido(pedido);
+                System.out.println("DEBUG - ID PRODUCTO: " + detalle.getId_producto());
+            }
+        }
+        List<Pedido> nuevosPedidos = pedidoService.saveLista(listaPedidos);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevosPedidos);
+    }
+    
+
     // Busqueda de pedidos por ID del pedido aceptando una variable dentro de la URL
     @GetMapping("/{id}")
     public ResponseEntity<Pedido> buscarId(@PathVariable Long id) {
@@ -78,7 +94,7 @@ public class PedidoController {
     }
 
     // Solicitud POST para actualizar un pedido cambiando todo sus atributos
-    @PutMapping("/actualizarPedido/{id}")
+    @PutMapping("/actualizar/{id}")
     public ResponseEntity<Pedido> actualizar(@PathVariable Long id, @RequestBody Pedido pedido) {
         try {
             Pedido ped = pedidoService.findById(id);
