@@ -83,7 +83,7 @@ public class PedidoController {
         }
     }
 
-    // Busqueda de pedidos por fecha del pedido
+    // Busqueda de pedidos por fecha del pedido -- ARREGLAR 
     @GetMapping("/buscarFecha")
     public ResponseEntity<List<Pedido>> buscarFecha(Date fechaPedido) {
         List<Pedido> pedidos = pedidoService.buscarFecha(fechaPedido);
@@ -124,7 +124,7 @@ public class PedidoController {
 
     // Busqueda de pedidos por la ID de usuario comunicandose con el microservicio
     // de usuarios
-    @GetMapping("/{id}/pedidos-cliente")
+    @GetMapping("/{id}/pedidos-cliente") // RECORTAR DETALLES CONTACTO
     public ResponseEntity<List<PedidoUsuarioDTO>> getPedidosUsuario(@PathVariable Long id) {
         try {
             List<PedidoUsuarioDTO> pedidosPorUser = pedidoService.listarPedidosPorUsuario(id);

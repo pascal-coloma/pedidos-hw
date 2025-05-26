@@ -41,8 +41,4 @@ public class DetallePedido {
     @JsonBackReference
     private Pedido pedido;
 
-    
-
-    
-
 }
