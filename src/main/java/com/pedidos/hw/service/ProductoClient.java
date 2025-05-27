@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.pedidos.hw.dto.ProductoDTO;
 
-@FeignClient(name = "producto-service", url = "https://producto-hw.onrender.com/hoppyware/v1/producto")
+@FeignClient(name = "producto-service", url = "http://3.239.1.194:8082/hoppyware/v1/producto")
 public interface ProductoClient {
 
     @GetMapping("/{id}")

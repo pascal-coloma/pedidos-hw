@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.pedidos.hw.dto.UsuarioDto;
 
 // Cliente que establece y define la comunicación con el microservicio de usuarios a través del puerto 8081 definido en las propiedades de cada MS
-@FeignClient(name = "usuario-service", url = "https://ms-usuarios-hw.onrender.com/hoppyware/v1/usuario")
+@FeignClient(name = "usuario-service", url = "http://18.208.202.14:8080/hoppyware/v1/usuario")
 public interface UsuarioClient {
 
     // Busqueda de usuario por RUN trayendo sus datos a traves del DTO (Objeto de transferencia de datos)

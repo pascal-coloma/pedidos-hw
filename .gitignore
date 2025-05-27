@@ -34,3 +34,4 @@ build/
 
 ###LOCAL###
 env.properties
+/wallet/
